@@ -1,0 +1,9 @@
+name = "Migrate from my_test"
+description = "Module to migrate my old site content to Drupal 7"
+package = "Migration"
+core = 7.x
+
+dependencies[] = migrate
+
+;  include the files that contain your Migrate classes
+files[] = my_test.inc.php
