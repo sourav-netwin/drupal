@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Restricts the option of enabling/disabling his personal contact form.
+ * Based on permissions defined by this module.
+ */
+//drupal_add_js(drupal_get_path('module', 'pw_membership_reg_number') .'/js/pw_membership_reg_number.js');
+
+ //if ($_SERVER['REQUEST_URI'] == '/content/cotisation-pour-particuliers'){
+ // 	drupal_add_js(drupal_get_path('module', 'pw_membership_reg_number') .'/js/pw_membership_reg_number.js');
+ // 	drupal_add_css(drupal_get_path('module', 'pw_membership_reg_number') .'/css/pw_membership_reg_number.css');  	
+ //	}
+ 

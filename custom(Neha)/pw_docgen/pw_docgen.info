@@ -1,0 +1,7 @@
+name = "Manage digital document generation"
+description = "Manage digital document generation transparently"
+core = 7.x
+
+stylesheets[all][] = css/style.css
+scripts[] = js/script.js
+scripts[] = js/update_data.js

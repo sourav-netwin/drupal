@@ -1,0 +1,3 @@
+name = "Pragmawork shipping rate"
+description = "Manage shipping rate relative to weight"
+core = 7.x

@@ -1,0 +1,325 @@
+<?php
+/**
+ * @file main module file
+ */
+
+
+/**
+ * Implements hook_permission().
+ */
+function pw_docgen_permission() {
+	return array(
+			'pw_docgen_usage' => array(
+					'title' => t('Use pw docgen'),
+			)
+	);
+}
+
+/**
+ * Implementation of hook_menu()
+ */
+function pw_docgen_menu()
+{
+	$items = array();   
+
+	$items['pwdocgen/doclist'] = array(
+		'title' => t('Liste de vos modèles de documents'),
+		'page callback' => 'pw_docgen_doclist_view',
+		'access arguments' => array('pw_docgen_usage'),
+	);
+
+	$items['pwdocgen/%/%/edit'] = array(
+			'page callback' => 'pw_docgen_doc_edit',
+			'page arguments' => array(1, 2),
+			'access arguments' => array('pw_docgen_usage'),
+	);
+	
+	
+	return $items;
+}
+
+function pw_docgen_doc_edit($doc_id, $juid)
+{	
+	// Update doc access_date
+	$upd = db_update('matching_data')
+	->fields(array(
+				'access_date'	=> time(),
+			)
+	)
+	->condition(db_and()
+		->condition('jid', $doc_id)
+		->condition('access_date', '0')
+	)
+	->execute();
+	
+	drupal_set_title(t('Votre document'));
+	$link = create_link($doc_id, $juid, 'edit');
+	return theme('doc_edit', ['link' => $link]);
+}
+
+function pw_docgen_doclist_view()
+{
+	return theme('mydoclist');
+}
+
+function pw_docgen_theme()
+{
+	$doclist = array(
+        'mydoclist' => array(
+            'render element' => 'elements',
+            'template' => 'templates/doclist',
+        ),
+
+		'doc_edit' => array(
+				'template' => 'templates/doc_edit',
+				'variables' => array('link' => NULL),
+		)
+						
+    );
+	
+    return $doclist;
+}
+
+function get_matching_data($uid)
+{
+	$results = db_select('matching_data', 'm')
+    ->fields('m')
+    ->condition('user_id', $uid)
+    ->execute()
+    ->fetchAll();
+	
+	return $results;
+}
+
+function update_matching_data($order_id, $skuid, $status)
+{
+	$upd = db_update('matching_data')
+		->fields(array(
+			'status'		=> $status,
+			'access_date'	=> time(),
+			)
+		)
+		->condition(db_and()
+			->condition('ord_id', $order_id)
+			->condition('p_skuid', $skuid)
+		)
+		->execute();
+}
+
+function add_matching_data($order_id, $uid, $jid, $psku, $ptitle)
+{
+	$qr = db_insert('matching_data')
+		->fields(array(
+		'ord_id'		=> $order_id,
+		'user_id'		=> $uid,
+		'purchase_date'	=> time(),
+		'jid'			=> $jid,
+		'p_skuid'		=> $psku,
+		'p_title'		=> $ptitle,
+		'status'		=> 'incomplete',
+		))
+		->execute();
+}
+
+function get_uid_from_order($oid)
+{
+	$r = db_select('commerce_order', 'c')
+    ->fields('c', array('uid'))
+    ->condition('order_id', $oid)
+    ->execute()
+    ->fetchAssoc();
+
+	return $r;
+}
+
+function get_juid_from_uid($uid)
+{
+	$user = user_load($uid);
+
+	db_set_active('db_joomla');
+
+	$r = db_select('users', 'u')
+			->fields('u', array('username', 'id'))
+			->condition('username', $user->name)
+			->execute()
+			->fetchAssoc();
+
+	db_set_active();	
+
+	return $r['id'];
+}
+
+function get_products_from_order($order)
+{
+	$t_prods = array();
+	$line_items = $order->commerce_line_items['und'];
+	foreach ($line_items as $lid)
+	{
+		$line_item = commerce_line_item_load($lid['line_item_id']);
+		if (isset($line_item->commerce_product))
+		{
+			$pid = $line_item->commerce_product['und'][0]['product_id'];
+			$product =  commerce_product_load($pid);
+			$pquantity = (int)$line_item->quantity;
+			for ($i = 1; $i <= $pquantity; $i++)
+			{
+				$product->skuid = $product->sku . '-' . $i;
+				$t_prods[] = clone($product);
+			}
+		}
+	}
+
+	return $t_prods;
+}
+
+
+function sync_user($uid)
+{
+	$user = user_load($uid);
+
+	db_set_active('db_joomla');
+
+	$r = db_select('users', 'u')
+			->fields('u', array('username', 'id'))
+			->condition('username', $user->name)
+			->execute()
+			->fetchAssoc();
+
+	if (empty($r))
+	{
+		// create new user
+		try
+		{
+			$qid = db_insert('users')
+					->fields(array(
+						'name'		=> $user->name,
+						'username'	=> $user->name,
+						'email'		=> $user->mail,
+						'password'	=> $user->pass,
+						'params'	=> '{"admin_style":"","admin_language":"","language":"","editor":"","helpsite":"","timezone":""}',
+					))
+					->execute();
+			$juid = $qid;
+			$qgid = db_insert('user_usergroup_map')
+				->fields(array(
+					'user_id'	=> $juid,
+					'group_id'	=> 3, // author
+				))
+				->execute();
+		}
+		catch (Exception $e)
+		{
+			echo $e;
+		}
+	}
+	else
+	{
+		$juid = $r['id'];
+	}
+
+	db_set_active();
+	
+	return $juid;
+}
+
+function create_doc_inj($jform_id, $juid)
+{
+	$dnow = new DateTime();
+
+	db_set_active('db_joomla');
+
+	$doc_id = db_insert('ques_documents')
+		->fields(array(
+			'form_id'		=> $jform_id,
+			'answers'		=>  '{}',
+			'creation_date'	=> $dnow->format('Y-m-d H:i:s'),
+			'modified_date'	=> $dnow->format('Y-m-d H:i:s'),
+			'checked_out'	=> 0,
+			'created_by'	=> $juid,
+		))
+		->execute();
+
+	db_set_active();
+	
+	return $doc_id;
+}
+
+function check_link($jid)
+{
+	$result = db_select('matching_data', 'm')
+		->fields('m')
+		->condition('jid', $jid)
+		->execute()
+		->fetchAssoc();
+	
+	if (($result['access_date'] != 0) // Document has been edited at least onece
+			&& (time() > ($result['access_date'] + 5 * 24 * 60 * 60))) // User can edit during 5 days
+		$st = 'downloaded';
+	else
+		$st = $result['status'];
+	
+	if ($st == 'incomplete')
+	{
+		// check answers
+		db_set_active('db_joomla');
+
+		$r = db_select('ques_documents', 'q')
+			->fields('q', array('answers'))
+			->condition('id', $jid)
+			->execute()
+			->fetchAssoc();
+		
+		db_set_active();
+		
+		if (strpos($r['answers'], 'com_questionnaire_field_218')) // com_questionnaire_field_218 = description de l'appartement
+		{
+			$st = 'downloadable';
+			update_matching_data($jid, $st);
+		}
+	}
+
+	return $st;
+}
+
+function create_link($jid, $juid, $status)
+{
+	// TODO : add download mode option
+	$dhostname = variable_get('snpcdoc_hostname');
+	$link = $dhostname . '/index.php?option=com_questionnaire&task=document.' . $status . '&id=' . $jid . '&nomenu=1';
+	$rlink = $dhostname . '/?user_id=' . $juid . '&return=' . urlencode($link);
+
+	return $rlink;
+}
+
+function generate_links($uid)
+{
+	$udata = get_matching_data($uid);
+	$juid = get_juid_from_uid($uid);
+	$t_links = array();
+	foreach ($udata as $link)
+	{
+		$data['status'] = check_link($link->jid);
+		$data['title'] = $link->p_title;
+		$data['pdate'] = $link->purchase_date;
+		$data['jid'] = $link->jid;
+		$data['juid'] = $juid;			
+		$t_links[] = $data;
+	}
+
+	return $t_links;
+}
+
+function pw_docgen_rule_action($order)
+{
+	$guid = get_uid_from_order($order->order_id);
+	$uid = $guid['uid'];
+
+	$juid = sync_user($uid);
+	$prods = get_products_from_order($order);
+
+	foreach ($prods as $prod)
+	{
+		$jdoc_id = create_doc_inj($prod->field_form_id['und'][0]['value'], $juid);
+		add_matching_data($order->order_id, $uid, $jdoc_id, $prod->skuid, $prod->title);
+	}
+}

@@ -1,0 +1,5 @@
+name = PW Membership registration number
+description = Show a registration number input if prolongation
+core = 7.x
+
+scripts[] = js/pw_membership_reg_number.js

@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file pw_docgen.install
+ * Install file for the pw_docgen module.
+ */
+
+function pw_docgen_schema() 
+{
+	$schema['matching_data'] = array(
+		'description' => 'The table to link between drupal orders and joomla docs',
+		'fields' => array(
+			'ord_id' => array(
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE),
+			'user_id' => array(
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE),
+			'purchase_date' => array(
+				'type' => 'int',
+				'default' => 0),
+			'access_date' => array(
+				'type' => 'int',
+				'default' => 0),
+			'jid' => array(
+				'type' => 'varchar',
+				'length' => 64,
+				'not null' => TRUE,
+				'default' => ''),
+			'p_skuid' => array(
+				'type' => 'varchar',
+				'length' => 32,
+				'not null' => TRUE,
+				'default' => ''),
+			'p_title' => array(
+				'type' => 'varchar',
+				'length' => 64,
+				'not null' => TRUE,
+				'default' => ''),
+			'status' => array(
+				'type' => 'varchar',
+				'length' => 16,
+				'not null' => TRUE,
+				'default' => ''),
+		),
+    );
+
+    return $schema;
+}
+
+?>

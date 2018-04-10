@@ -1,0 +1,244 @@
+<?php
+/**
+ * @file
+ * This module defines calucation blocks functions of website.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function calculation_menu()
+{
+  $items = array();
+  $items['calculation'] = array(
+    'title' => t('Calcul de votre loyer indexé'),
+    'description' =>t('Calcul de votre loyer indexé'),
+    //'page callback' => 'under_maintenance',
+  	'page callback' => 'drupal_get_form',
+    'page arguments' => array('calculate'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['calculation_result'] = array(
+    'title' => 'Calcul de votre loyer index&eacute;',
+    'description' => '',
+    'page callback' => 'calculate_result',
+    'page arguments' => array(),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function under_maintenance()
+{
+	return "<h1>".t("Service en maintenance")."</h1>";
+}
+
+function calculate() {
+
+	drupal_set_title("Calcul de votre loyer indexé");
+	$form = array();
+	$format = 'Y-m-d';
+	
+	$form['#action'] = 'calculation_result';
+	$form['#method'] = 'post';
+
+	$form['some_text3'] = array(
+		'#markup' => "<p>Veuillez vous munir de votre contrat de location et recopier les informations suivantes : </p>"
+	);
+
+	/*$form['base'] = array(
+		'#type' => 'textfield',
+		'#number_type' => 'decimal',
+		'#title' => t('Base'),
+		'#size' => 3,
+		'#required' => TRUE,
+		'#maxlength' => 20,
+    );*/
+
+	$basearray = array();
+	$result = db_query("select distinct title from node where type='index_table' order by title");
+	while ($row = $result->fetchObject()) {
+		$basearray[$row->title] = $row->title;
+	}
+
+	$form['base'] = array(
+		'#type' => 'select',
+		'#title' => t('Base'),
+		'#options' => $basearray,	
+		'#required' => TRUE,
+	);
+
+	$form['some_text2'] = array(
+		'#markup' => t("La date de conclusion de votre bail (date de signature)")
+	);
+	
+	$form['signature'] = array(
+	  '#title' => "",
+	  '#type' => 'date_select',
+	  '#description' => '',
+	  '#date_format' => $format,
+	  '#date_year_range' => '-20:+1',
+	  '#default_value' => array(
+		'month' => format_date(time(), 'custom', 'n'), 
+		'day' => format_date(time(), 'custom', 'j'), 
+		'year' => format_date(time(), 'custom', 'Y'),
+	  ),
+	);
+	//$form['signature']['#attributes']['class'] = 'without-styles';
+	
+	$form['some_text1'] = array(
+		'#markup' => t("La date d'entree en vigueur de votre bail (le bail prend cours le)")
+	);
+	
+	/*Array ( [2004] => Array ( [2006-01] => 102.82 [2007-01] => 104.92 [2008-01] => 107.85 [2009-01] => 111.45 [2010-01] => 111.36 [2011-01] => 114.38 ) ) */
+	$form['start'] = array(
+	  '#title' => "",
+	  '#type' => 'date_select',
+	  '#description' => '',
+	  '#date_format' => $format,
+	  '#date_year_range' => '-20:+1',
+	  '#default_value' => array(
+		'month' => format_date(time(), 'custom', 'n'), 
+		'day' => format_date(time(), 'custom', 'j'), 
+		'year' => format_date(time(), 'custom', 'Y'),
+	  ),
+	);
+	
+	$form['some_text'] = array(
+		'#markup' => t('Le loyer de base (indiqu&eacute; sur le contrat en Francs belges ou en Euros) :')
+	);
+	
+	$form['value_euro'] = array(
+		'#type' => 'textfield',
+		'#number_type' => 'decimal',
+		'#title' => t('Euros'),
+		'#size' => 14,
+		'#maxlength' => 20,
+    );
+	
+	$form['value_euro']['#attributes']['style'] = 'width:20%';
+
+	$form['value_bef'] = array(
+		'#type' => 'textfield',
+		'#number_type' => 'decimal',
+		'#title' => t('BEF'),
+		'#size' => 14,
+		'#maxlength' => 20,
+    );
+	
+	$form['value_bef']['#attributes']['style'] = 'width:20%';
+
+	
+	$regions = [];
+	$vocabulary = taxonomy_vocabulary_machine_name_load('regions');
+	$terms = taxonomy_get_tree($vocabulary->vid);
+	foreach ($terms as $term)
+		$regions[$term->tid] = t($term->name);
+	
+	$form['region'] = array(
+			'#type' => 'select',
+			'#title' => t('Région du bien loué'),
+			'#options' => $regions,
+			'#required' => TRUE,
+	);
+
+	$form['main_residence'] = array(
+			'#type' => 'checkbox',
+			'#title' => t('Le bien est la résidence principale du locataire')
+	);
+	
+	$form['submit'] = array(
+		'#type' => 'submit',
+		'#value' => t('Calculer'),
+	);
+		
+	return $form;
+}
+
+
+function calculate_result() {
+		
+	drupal_set_title("Calcul de votre loyer indexé");
+	
+	$result = db_query("select nid from node where type='index_table'");
+	$arr_indexes = array();
+	while ($row = $result->fetchObject()) {
+		$n = node_load($row->nid);
+		$year = $n->field_year['und'][0]['value'];
+		$month = $n->field_month['und'][0]['value'];
+		$value = $n->field_value['und'][0]['value'];
+
+		$arr_indexes[trim($n->title)][$year.'-'.$month] = $value;
+	}
+
+	$output = " ";
+	$values = $_POST;
+	
+	$values['signature'] =  $values['signature']['year'].'-'.$values['signature']['month'].'-'.$values['signature']['day'];
+	$values['start'] =  $values['start']['year'].'-'.$values['start']['month'].'-'.$values['start']['day'];
+
+	$base = trim($values['base']);
+	$signature = $values['signature'];
+	$start = $values['start'];
+	
+	if (strtotime($start) < strtotime($signature)) {
+		drupal_set_message(t('La date d\'entr&eacute;e doit &ecirc;tre plus grande que la date de signature.'),'error');
+		drupal_goto('calculation');		
+	}
+	$start_price = $values['value_bef']; 
+	if ($values['value_euro']) {
+		$start_price = $values['value_euro'];
+	}
+
+	$syear = date('Y',strtotime($signature));
+	$smonth = date('m',strtotime($signature));
+	$sday = date('d',strtotime($signature));
+	$signature_index_month = ($smonth == 1) ? 12 : ($smonth - 1);
+	$signature_index_year = ($smonth == 1) ? ($syear - 1) : $syear;
+	$signature_index_year_month = $signature_index_year."-".sprintf("%02d", $signature_index_month);
+	$signature_index = $arr_indexes[$base][$signature_index_year_month];
+
+
+	$eyear = date('Y',strtotime($start));
+	$emonth = date('m',strtotime($start));
+	$eday = date('d',strtotime($start));
+	$current_index_month = ($emonth == 1) ? 12 : ($emonth - 1);
+	$current_index_year = ($current_index_month >= date("n")) ? (date("Y") - 1) : date("Y");
+	
+  	//die('entry year:'.(int)$eyear.' entry month:'.(int)$emonth.'entry day:'.(int)$eday.' main residence='.$values['main_residence'].' region='.$values['region']);
+//die(print_r($arr_indexes));
+	
+	// After 2016-04-01 => index gap for main residences in wallonia
+	if (
+		
+			(((int)$eday <= 1 && (int)$emonth == 4 && (int)$eyear == 2016) || ((int)$emonth < 4 && (int)$eyear == 2016) || ((int)$eyear < 2016))
+			&&
+			($values['main_residence'] == 1) && ($values['region'] == '599')
+	   )
+	{
+		$info_text = t("Année d'indexation modifiée suite au saut d'index sur les loyers.");
+		$current_index_year = $current_index_year-1;
+		//die("year=".$current_index_year);
+	}
+	else 
+		$info_text = '';
+	
+	$current_index_year_month = $current_index_year."-".sprintf("%02d", $current_index_month);
+	$current_index = $arr_indexes[$base][$current_index_year_month];
+
+	$current_rent = round($start_price *  $current_index / $signature_index,2);
+
+	$output .= "Base choisie: $base<br/>";
+	$output .= "Le loyer de base : $start_price (loyer du contrat) <br/>";
+	$output .= "Le bail a ete sign&eacute;/conclu le : ".date("d/m/Y",strtotime($signature))." (date de signature) <br/>";
+	$output .= "Le bail est entr&eacute; en vigueur le : ".date("d/m/Y",strtotime($start))." (le bail a pris cours le) <br/>";
+	$output .= "L'indice de d&eacute;part : $signature_index, indice du $signature_index_year_month (mois qui pr&eacute;c&egrave;de la signature/conclusion du bail) <br/>";
+	$output .= "L'indice en cours: $current_index au $current_index_year_month. $info_text<br/>";				
+	$output .= "<strong>Le loyer index&eacute; au $current_index_year_month : $current_rent &euro;</strong> ($start_price *  $current_index / $signature_index)<br/>";
+	$output .= "<br/>";
+	$output .= t('<a href="@url" class="btn-danger btn">Calculer une autre indexation</a>', array('@url' => url('calculation')));
+
+	return $output;
+}

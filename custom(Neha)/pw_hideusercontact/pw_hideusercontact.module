@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Restricts the option of enabling/disabling his personal contact form.
+ * Based on permissions defined by this module.
+ */
+function pw_hideusercontact_form_user_profile_form_alter(&$form, &$form_state, $form_id) {	
+	$form['account']['mail']['#access'] = FALSE;
+	$form['locale']['#access'] = FALSE;
+	$form['contact']['#access'] = FALSE;
+}
+
+function pw_hideusercontact_preprocess_node(&$vars) {
+    unset($vars['content']['links']['translation']);
+}

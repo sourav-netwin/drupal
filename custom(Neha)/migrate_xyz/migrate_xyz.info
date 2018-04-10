@@ -1,0 +1,6 @@
+name = "Migrate from XYZ"
+description = "Module to migrate my csv data to Drupal 7"
+package = "Migration"
+core = 7.x
+files[] = member_script.inc.php
+//files[] = member_mail.inc.php

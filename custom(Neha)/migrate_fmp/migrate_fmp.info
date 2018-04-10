@@ -1,0 +1,13 @@
+name = "Migrate from Filemaker"
+description = "Module to migrate the Filemaker content"
+package = "Migration"
+core = 7.x
+
+dependencies[] = migrate
+
+;  include the files that contain your Migrate classes
+files[] = members.inc.php
+files[] = association.inc.php
+files[] = phone_call_activity.inc.php
+files[] = mail_in_activity.inc.php
+files[] = mail_out_activity.inc.php

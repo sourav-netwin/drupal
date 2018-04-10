@@ -1,0 +1,3 @@
+name = "Pragmawork electronic lease condition"
+description = "Check if electronic lease has been checkout"
+core = 7.x

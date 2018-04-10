@@ -1,0 +1,9 @@
+name = "Migrate from FMP"
+description = "Module to migrate FMP users to Drupal 7"
+package = "Migration"
+core = 7.x
+
+dependencies[] = migrate
+
+;  include the files that contain your Migrate classes
+files[] = user.inc
