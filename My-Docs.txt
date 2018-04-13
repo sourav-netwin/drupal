@@ -1,0 +1,343 @@
+===========================================Function to get the video image on pause of that video======================================================================================
+        <html>
+        <head>
+            <title>JS and HTML5 Rule</title>
+            <script type='text/javascript'>
+                window.onload = function (){
+                    var video = document.getElementById('my_video');
+                    var thecanvas = document.getElementById('thecanvas');
+					var img = document.getElementById('thumbnail_img');
+					video.addEventListener('pause', function(){
+						draw( video, thecanvas, img);
+			 
+					}, false);
+                };
+				
+                function draw( video, thecanvas, img ){
+					// get the canvas context for drawing
+					var context = thecanvas.getContext('2d');
+					// draw the video contents into the canvas x, y, width, height
+					context.drawImage( video, 0, 0, thecanvas.width, thecanvas.height);
+					// get the image data from the canvas object
+                    var dataURL = thecanvas.toDataURL();
+					// set the source of the img tag
+					img.setAttribute('src', dataURL);
+                }
+            </script>
+        </head>
+        <body>
+			The Video
+			<br />
+			<video id="my_video" controls>
+				<source src="http://localhost/stvision/vision/uploads/plus_walking_tour/miami_commercial.mp4" type="video/mp4" />
+			</video>
+			<br />
+			The Canvas
+			<br />
+			<canvas id="thecanvas" style="width: 600px;">
+			</canvas>
+			<br />
+			The Image
+			<br />
+			<img id="thumbnail_img" alt="Right click to save" />
+			<br />
+        </body>
+    </html>
+=================================================================================================================================
+
+
+
+
+
+===========================================This function is to get the video image on page load======================================================================================
+		<div class="testclass"></div>
+		<script type='text/javascript'>
+			var video = document.createElement('video');
+			var source = document.createElement('source');
+			var img = document.createElement('img');
+			var thecanvas = document.createElement('canvas');
+
+			source.setAttribute('type' , 'video/mp4');
+			source.setAttribute("src", "http://localhost/stvision/vision/uploads/plus_walking_tour/movie.mp4");
+			video.appendChild(source);
+			thecanvas.width = 430;
+			thecanvas.height = 242;
+
+			window.onload = function (){
+				var context = thecanvas.getContext('2d');
+				context.drawImage( video, 0, 0, thecanvas.width, thecanvas.height);
+				var dataURL = thecanvas.toDataURL();
+				img.setAttribute('src', dataURL);
+				$('.testclass').append(img);
+				delete video;
+				delete thecanvas;
+			};
+		</script>
+=================================================================================================================================
+
+
+
+
+
+===============================================Google Analytics / Google Map==================================================================================
+
+Documentation for GA API :
+https://developers.google.com/analytics/devguides/reporting/core/v4/quickstart/service-php
+
+Test Batchget function response :
+https://developers.google.com/analytics/devguides/reporting/core/v4/rest/v4/reports/batchGet
+
+Google Map API key : AIzaSyAxAOuX6VZ3411GsROuhn-SxYbNC0skt9M
+Email Id : sourav.netwin@gmail.com
+
+=================================================================================================================================
+
+
+
+
+================================================Github Accounts=================================================================================
+
+My Personal Account :
+User Name - sourav-netwin
+Email Id - sourav.netwin@gmail.com
+Password - souravnetwin123
+global information :-
+name - sourav
+email - sourav.dara@netwininfo.com
+
+Netwin github account(for stvision) :
+User Name - sourav-netwin-github
+Email Id - sourav.dhara@netwinindia.biz
+Password - souravnetwin123
+
+Netwin gitlab Account(PED) :
+Username: sourav.dhara
+Password: sourav@gitlab
+http://192.168.43.51/php/pluswebsite.git
+
+Drupal project (Neha) :
+• Url : https://git-codecommit.us-east-1.amazonaws.com/v1/repos/snpcweb
+• username : sylwin@pragmawork.com-at-724753735913
+• password : H6B/Tt3mpWHeVeOHB3rg+i22Bx18j/cJJUOS0rGSGus=
+
+=================================================================================================================================
+
+
+
+
+===============================================Magento==================================================================================
+
+Magento Site Login Credential :
+Name : Sourav Dhara
+Email : sourav.netwin@gmail.com
+Password : Magento@2017
+Screen Name : sourav_netwin
+
+Admin Account :
+User Name - sourav.netwin
+password - Magento@2017
+email - sourav.netwin@gmail.com
+encryption key - 20c938a0ef8f2dcbb109a7aab9897d1e
+
+=================================================================================================================================
+
+
+
+
+=================================External Link=============================================================================================
+
+Download Country flag icon free : 
+https://www.flaticon.com
+https://www.shareicon.net
+
+Video Api documentation :
+https://developer.vimeo.com/api/start
+
+fancybox plugin :
+https://fancyapps.com/fancybox/3/docs/
+
+Download Admin panel theme free :
+https://colorlib.com/polygon/gentelella/index.html
+
+Color picker plugin :
+https://bgrins.github.io/spectrum/
+
+For free tutorial :
+https://www.javatpoint.com/
+
+Tinymce plugin :
+https://www.tinymce.com/download/
+
+responsive file manager plugin :
+http://www.responsivefilemanager.com/
+
+Check email validation using regular expression :
+https://www.regular-expressions.info/email.html
+
+W3schools Sample template :
+https://www.w3schools.com/w3css/w3css_templates.asp
+
+PHP Excel Reader :
+http://coursesweb.net/php-mysql/read-excel-file-data-php_pc
+
+==============================================================================================================================
+
+
+
+
+====================================VIMEO API=============================================================================================
+VIMEO DETAILS :-
+--------------
+
+Login Credentials :
+Name - Sourav Dhara
+Email id - sourav.netwin@gmail.com
+Password - souravnetwin123
+
+vimeo API :
+Url - https://developer.vimeo.com/apps
+Authoentication url - https://developer.vimeo.com/apps/118025#authentication
+Client identifier - 0f4f509b6fae54c629a042fea38528dd44fe9c8e
+Client Secret - RjW6My4B0KBe9vZFuA0aTGhCcyO7Hf6oqQ8ekwKXg3tpk/AwjotXj1D1IJyuVde0od1TpMYhs46E+2r+jHQ17g/fyVBevIIgeQjG45IffkOM8oJmafQCcv1Kqo4Jy1yC
+Authorize url - https://api.vimeo.com/oauth/authorize
+Access token Url - https://api.vimeo.com/oauth/access_token
+Access token - f76202db96349d44d30a111021a597b9
+
+//Test API online : 
+https://developer.vimeo.com/api/endpoints/videos(Get a video section)
+
+Solutions Url :
+https://stackoverflow.com/questions/47735579/fetch-video-duration-using-the-new-vimeo-api
+https://stackoverflow.com/questions/47079078/vimeo-php-simple-request-not-working
+
+//Function is used to get the details through vimeo API
+function vimeoApi()
+{
+	require_once( APPPATH.'third_party\vimeo.php-1.3.0'.DIRECTORY_SEPARATOR.'autoload.php');
+	$client_id = '0f4f509b6fae54c629a042fea38528dd44fe9c8e'; //'Client identifier' in my app
+	$client_secret = 'RjW6My4B0KBe9vZFuA0aTGhCcyO7Hf6oqQ8ekwKXg3tpk/AwjotXj1D1IJyuVde0od1TpMYhs46E+2r+jHQ17g/fyVBevIIgeQjG45IffkOM8oJmafQCcv1Kqo4Jy1yC'; // 'Client secrets' in my app
+	$lib = new \Vimeo\Vimeo($client_id, $client_secret);
+	$lib->setToken('f76202db96349d44d30a111021a597b9');
+	$response = $lib->request('/videos/237573790', array(), 'GET');
+	echo "<pre>";print_r($response);die('popop');
+}
+
+=================================================================================================================================
+
+
+
+
+======================================Office Tiffin========================================================================================
+
+Prashant : {(350+150+50+110)-(60+500)}
+Sumeet : 200/-
+Amit : 100/-
+
+Tiffin upto 31st October , 2017 : 340/- (paid)
+Tiffin upto 31st November , 2017 : 375/-(paid) : Balance - 25/-
+Tiffin upto 31st December , 2017 : 500/-(Paid) : Balance - 50/- 
+Tiffin upto 31st January , 2018 : 425/-(Paid) : Balance - 75/-
+Tiffin upto 28th February , 2018 : 400/-(Paid)
+Tiffin upto 31st March , 2018 : 525/-
+
+===============================================================================================================================
+
+
+
+
+====================================Plus Project Details===========================================================================================
+
+(1)Front End -
+url : http://plus-ed.com/betaweb
+
+(2)Backend -
+url : http://plus-ed.com/vision_ag/index.php/vauth/backoffice
+User Name : usercms
+Password : usercms@2061@/usercms_1820_
+
+(3)Agent's Area -
+url : http://plus-ed.com/vision_ag/index.php/vauth/agents
+username : Int_pEaTo
+password : 75907469
+
+(4)Mantis Account Details :
+url : https://webnmobidev.net/mantisbt/login_page.php
+User Name : Sourav.Dhara
+Password : S@123
+
+(5)OS Ticket :
+http://netwinindia.net/itsupport/osticket/upload/view.php
+
+===============================================================================================================================
+
+
+
+
+==================================Short Task(for PMS)=============================================================================================
+
+(1)Changed in the campus manager's login activity details .
+(2)Checked uploaded changes on live .
+(3)Started working on the activity report section .
+
+
+
+===============================================================================================================================
+
+
+
+
+==================================Details Daily Task===============================================================================================
+Today I have done following tasks in Plus Education Development Project :
+
+(1)Before if there is no extra activity present for any group then we didnot show the activity details in activity program . Now we have checked if any
+master activity present for the searched result or not , If we found the same then we have shown the details from the master activity . Also for the first
+date we have shown the arrival detaiols from master and for the last date we have shown the departure details from master activity . Completed the functionality
+and tested properly .
+
+(2)Checked in both front and back end for the latest changes . We found one issue related to the export the activity report in excel format . Then we have looked for the
+exact issue by debugging the code . Finally we found that the issue is because of the .htaccess file settings .
+
+(3)Before we have shown the activity report
+
+=================================================================================================================================
+Drupal Credentials :
+user name : admin
+password : admin123
+email : sourav.netwin@gmail.com
+
+plused_job_positions
+pulsed_job_contract
+plused_teacher_application
+
+
+=================================================================================================================================
+
+SELECT * FROM `plused_role_menu` where mnu_menu_name like '%Manage master activity%' or mnu_menu_name like '%Manage extra activity%' or mnu_menu_name like '%Activity report%' or mnu_menu_name like '%Manage student group%' 
+
+//Install drush on windows
+https://www.drupal.org/node/594744
+
+//Migrate module documentation
+https://www.drupal.org/node/1006982
+
+delete n1 from tbl_test n1 inner join tbl_test n2 where n1.name=n2.name and n1.id>n2.id
+=================================================================================================================================
+
+truncate table frontweb_master_activity;
+truncate table frontweb_fixed_day_activity;
+truncate table frontweb_fixed_day_activity_details;
+truncate table frontweb_fixed_day_managed_by;
+truncate table frontweb_extra_master_activity;
+truncate table frontweb_extra_day_activity;
+truncate table frontweb_extra_day_activity_details;
+truncate table frontweb_extra_day_managed_by;
+truncate table frontweb_student_group;
+
+
+Your login: sourav.netwin@gmail.com
+Your password: l35dacw
+
+http://localhost/drupal_seven_test/crm-core/contact
+
+
+=================================================================================================================================
