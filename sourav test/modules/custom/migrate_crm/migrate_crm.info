@@ -1,0 +1,9 @@
+name = "Migrate from CSV to crm core module"
+description = "Migrate from CSV to crm core module"
+package = "Migration"
+core = 7.x
+
+dependencies[] = migrate
+
+;  include the files that contain your Migrate classes
+files[] = migrate_crm.inc.php
