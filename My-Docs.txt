@@ -116,9 +116,9 @@ Password: sourav@gitlab
 http://192.168.43.51/php/pluswebsite.git
 
 Drupal project (Neha) :
-• Url : https://git-codecommit.us-east-1.amazonaws.com/v1/repos/snpcweb
-• username : sylwin@pragmawork.com-at-724753735913
-• password : H6B/Tt3mpWHeVeOHB3rg+i22Bx18j/cJJUOS0rGSGus=
+â€¢ Url : https://git-codecommit.us-east-1.amazonaws.com/v1/repos/snpcweb
+â€¢ username : sylwin@pragmawork.com-at-724753735913
+â€¢ password : H6B/Tt3mpWHeVeOHB3rg+i22Bx18j/cJJUOS0rGSGus=
 
 =================================================================================================================================
 
@@ -341,3 +341,105 @@ http://localhost/drupal_seven_test/crm-core/contact
 
 
 =================================================================================================================================
+
+
+
+
+
+Santosh : 
+
+<table cellspacing="0" cellpadding="0" border="0" id="form-table">
+	
+		<!--tr><td style="height:15px;"></td></tr -->
+   <tbody><tr>
+		
+		   
+					<td id="BathwrapProjectTypeouterTdId" class="RequiredQuest magnify-later">
+						<table border="0" id="BathwrapProjectTypetableTdId">
+							<tbody><tr>
+							<td>
+						<span class="promptClass">
+							
+							
+							Tell us about the project you're working on:
+							
+							
+						</span>
+						</td>
+						</tr>
+					<tr><td style="height:10px;"></td></tr>	
+				  	<tr>
+					<td id="BathwrapProjectTypeId" class="formElementReq magnify-later"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td align="left" class="cols0 magnify-later" style="white-space: nowrap"><input type="Radio" name="BathwrapProjectType" value="BATHTUB_SHOWER_CONVERSION"> <!--100-->Bathtub to shower conversion</td></tr><tr><td align="left" class="cols0 magnify-later" style="white-space: nowrap"><input type="Radio" name="BathwrapProjectType" value="BATH_AND_SHOWER_UPDATES"> <!--110-->Bath &amp; Shower Updates</td></tr><tr><td align="left" class="cols0 magnify-later" style="white-space: nowrap"><input type="Radio" name="BathwrapProjectType" value="SHOWER_ENCLOSURE"> <!--120-->Shower Enclosure</td></tr><tr><td align="left" class="cols0 magnify-later" style="white-space: nowrap"><input type="Radio" name="BathwrapProjectType" value="WALK_IN_SHOWER"> <!--130-->Walk In Shower</td></tr><tr><td align="left" class="cols0 magnify-later" style="white-space: nowrap"><input type="Radio" name="BathwrapProjectType" value="LOW_THRESHOLD_SHOWER"> <!--140-->Low Threshold Shower</td></tr></tbody></table></td>
+				 	</tr>
+				 	
+						</tbody></table>
+					</td>
+
+	
+		   
+					<td id="PCouterTdId" class="RequiredQuest magnify-later">
+						<table border="0" id="PCtableTdId">
+							<tbody><tr>
+							<td>
+						<span class="promptClass">
+							
+							
+							Your zip code:
+							
+							
+						</span>
+						</td>
+						</tr>
+					<tr><td style="height:10px;"></td></tr>	
+				  	<tr>
+					<td id="PCId" class="formElementReq magnify-later"><input type="text" id="indexzipid" maxlength="10" name="PC"></td>
+				 	</tr>
+				 	
+						</tbody></table>
+					</td>
+
+	
+			<!--tr><td style="height:15px;"></td></tr -->
+							</tr>
+	</tbody></table>
+	
+	
+	
+	
+	$('input[name="BathwrapProjectType"]').each(function(index,element){
+console.log($(element).parent().text());
+    $(element).parent().contents().wrap(function() {
+      console.log($(this).text().toString().replace('&' , 'and'));
+		//return "test start --"+$(this).text().toString().replace('&' , 'and')+"--";
+    });
+});
+
+
+
+
+var bathwrapProjetcType = document.getElementsByName("BathwrapProjectType");
+console.log(bathwrapProjetcType);
+$.each(bathwrapProjetcType , function(index,element){
+console.log(index);
+console.log($(element).parent().text());
+console.log("<label for='interest"+(index+1)+"'><span id='span"+(index+1)+"' class='radioSpan'>"+$(element).parent().text()+"</span></label>");
+
+var newHtml = $(element).parent().html().toString().replace($(element).parent().text() , "<label for='interest"+(index+1)+"'><span id='span"+(index+1)+"' class='radioSpan'>"+$(element).parent().text()+"</span></label>";
+
+console.log(newHtml);
+       });
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+$('input[name="BathwrapProjectType"]').each(function(index,element){
+â€‹
+var newTxt = "<label for='interest"+(index+1)+"'><span id='span"+(index+1)+"' class='radioSpan'>"+$(element).parent().text();+"</span></label>";
+console.log(newTxt);
+$(element).parent().append(newTxt);
+});
