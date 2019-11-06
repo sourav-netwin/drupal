@@ -443,3 +443,71 @@ var newTxt = "<label for='interest"+(index+1)+"'><span id='span"+(index+1)+"' cl
 console.log(newTxt);
 $(element).parent().append(newTxt);
 });
+
+
+
+
+
+
+
+
+===============================================================================================================================
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Try jQuery Online</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+$(document).ready(function(){
+    $('input[name="BathwrapProjectType"]').each(function(index , element){
+       console.log(index);
+       var selectorStr = $(element).parent().html().toString();
+       var replaceTxt = selectorStr.substring(selectorStr.indexOf('-->')+3);
+       var replaceWith = "<label for='interest"+(index+1)+"'><span id='span"+(index+1)+"' class='radioSpan'>"+replaceTxt+"</span></label>";
+       var updatedHtml = selectorStr.replace(replaceTxt , replaceWith);
+       updatedHtml = updatedHtml.replace(/<!--[0-9]{3}-->/ , '');
+       $(element).parent().html(updatedHtml);
+    });
+});
+
+
+
+</script>
+</head>
+<body>
+    <table cellspacing="0" cellpadding="0" border="0">
+       <tbody>
+          <tr>
+             <td align="left" class="cols0 magnify-later" style="white-space: nowrap">
+                <input type="Radio" name="BathwrapProjectType" value="BATHTUB_SHOWER_CONVERSION"> <!--100-->Bathtub to shower conversion
+             </td>
+          </tr>
+          <tr>
+             <td align="left" class="cols0 magnify-later" style="white-space: nowrap">
+                <input type="Radio" name="BathwrapProjectType" value="BATH_AND_SHOWER_UPDATES"> <!--110-->Bath &amp; Shower Updates
+             </td>
+          </tr>
+          <tr>
+             <td align="left" class="cols0 magnify-later" style="white-space: nowrap">
+                <input type="Radio" name="BathwrapProjectType" value="SHOWER_ENCLOSURE"> <!--120-->Shower Enclosure
+             </td>
+          </tr>
+          <tr>
+             <td align="left" class="cols0 magnify-later" style="white-space: nowrap">
+                <input type="Radio" name="BathwrapProjectType" value="WALK_IN_SHOWER"> <!--130-->Walk In Shower
+             </td>
+          </tr>
+          <tr>
+             <td align="left" class="cols0 magnify-later" style="white-space: nowrap">
+                <input type="Radio" name="BathwrapProjectType" value="LOW_THRESHOLD_SHOWER"> <!--140-->Low Threshold Shower
+             </td>
+          </tr>
+       </tbody>
+    </table>
+</body>
+</html>
+
+
+https://www.tutorialspoint.com/online_jquery_editor.php
