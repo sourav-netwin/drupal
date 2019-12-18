@@ -511,3 +511,39 @@ $(document).ready(function(){
 
 
 https://www.tutorialspoint.com/online_jquery_editor.php
+
+
+===============================================================================================================================
+
+https://www.tutorialspoint.com/execute_sql_online.php
+
+CREATE TABLE zip_entity (
+  id int(11) NOT NULL,
+  entity varchar(100) NOT NULL,
+  zip varchar(100) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+INSERT INTO zip_entity (id, entity, zip) VALUES
+(1, 'E1', '1'),
+(2, 'E1', '2'),
+(3, 'E1', '3'),
+(4, 'E2', '1'),
+(5, 'E2', '2'),
+(6, 'E2', '4'),
+(7, 'E3', '1'),
+(8, 'E3', '2'),
+(9, 'E3', '5'),
+(10, 'E1', '1'),
+(11, 'E1', '2'),
+(12, 'E1', '3'),
+(13, 'E2', '1'),
+(14, 'E2', '2'),
+(15, 'E2', '4'),
+(16, 'E3', '1'),
+(17, 'E3', '2'),
+(18, 'E3', '5');
+
+select * from zip_entity;
+
+SELECT zip_entity_count.zip from ( select zip, sum(case when entity="E1" then 1 else 0 end) as e1entity, sum(case when entity="E2" then 1 else 0 end) as e2entity, sum(case when entity="E3" then 1 else 0 end) as e3entity from zip_entity group by zip ) zip_entity_count where zip_entity_count.e1entity >= 1 AND zip_entity_count.e2entity >= 1 AND zip_entity_count.e3entity >= 1;
